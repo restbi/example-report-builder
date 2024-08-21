@@ -8,7 +8,7 @@ const ChinookConnection: Connection = {
     port: 5433,
     user: 'postgres',
     password: 'test',
-    database: 'Chinook',
+    database: 'chinook',
     type: DatabaseType.POSTGRES,
 };
 

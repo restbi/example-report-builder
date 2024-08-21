@@ -5,10 +5,10 @@ const PostgresConnection: Connection = {
     id: '1',
     name: 'Postgres',
     host: 'localhost',//'host.docker.internal',
-    port: 5432,
+    port: 5433,
     user: 'postgres',
     password: 'test',
-    database: 'AdventureWorks',
+    database: 'adventureworks',
     type: DatabaseType.POSTGRES,
 };
 
