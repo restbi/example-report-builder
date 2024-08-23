@@ -88,7 +88,20 @@ const productSubcategoryTable: Table = {
         { id: '3', dbName: 'Name', dataType: ColumnDataType.STRING, name: 'Sub-Category Name' },
     ]
 };
-
+const invoiceTable: Table =     {
+    "id": "4",
+    "dbName": "invoice",
+    "schema": "public",
+    "name": "Invoice",
+    "columns": [
+      {
+        "id": "total",
+        "dbName": "total",
+        "name": "total",
+        "dataType": ColumnDataType.NUMBER,
+      }
+    ],
+}
 // Update Joins to include ProductCategory and ProductSubcategory
 const updatedJoins: Join[] = [
     {
@@ -154,7 +167,7 @@ export const AdventureWorksModel: Model = {
     name: 'AdventureWorksModel',
     displayName: 'Adventure Works Model',  // Added display name for the model
     connection: PostgresConnection,
-    tables: [salesOrderHeaderTable, salesOrderDetailTable, productTable, customerTable, productCategoryTable, productSubcategoryTable],
+    tables: [salesOrderHeaderTable, salesOrderDetailTable, productTable, customerTable, productCategoryTable, productSubcategoryTable, invoiceTable],
     joins: updatedJoins,
     formulas: formulas,
     filters: []

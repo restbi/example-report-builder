@@ -27,7 +27,12 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
-
+.line-error {
+  background-color: #5a3939 !important;
+}
+.line-added {
+  background-color: #465246; /* Light green */
+}
 .App-link {
   color: #61dafb;
 }

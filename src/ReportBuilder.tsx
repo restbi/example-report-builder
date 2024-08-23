@@ -8,6 +8,11 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import { FormControl } from '@mui/material';
 import Filter from './Filter';
+import CodeMirror from '@uiw/react-codemirror';
+import { json } from '@codemirror/lang-json';
+import { okaidia } from '@uiw/codemirror-theme-okaidia';
+import { EditorView, Decoration } from '@codemirror/view';
+import { RangeSetBuilder } from '@codemirror/state';
 
 type ReportBuilderProps = {
   client: RestBIClient;
@@ -50,7 +55,7 @@ const ReportBuilder: React.FC<ReportBuilderProps> = ({ client, activeModel }) =>
 
   return (
     <div className="flex flex-row h-full w-full">
-      <div className="flex flex-col border-r-2 p-2 bg-gray-800 overflow-y-auto overflow-x-hidden" style={{ scrollbarWidth: 'thin', width: '400px', height: 'calc(100vh - 70px)' }}>
+      <div className="flex flex-col border-r-2 p-2 overflow-y-auto overflow-x-hidden" style={{background:'#272822', scrollbarWidth: 'thin', width: '400px', height: 'calc(100vh - 70px)' }}>
         <div id="column-search" className="text-white flex w-full">
           <TextField
             label="Search Columns"
@@ -80,7 +85,7 @@ const ReportBuilder: React.FC<ReportBuilderProps> = ({ client, activeModel }) =>
               }).map((column: Column) => (
                 <div className="flex flex-row items-center pr-2 py-2 hover:bg-gray-700" key={column.name}>
                   <Checkbox
-                    className="h-6"
+                    className="h-5"
                     onChange={(e) => {
                       if (e.target.checked) {
                         setQuery({
@@ -94,11 +99,25 @@ const ReportBuilder: React.FC<ReportBuilderProps> = ({ client, activeModel }) =>
                         });
                       }
                     }}
+                    sx={{
+                      '& .MuiSvgIcon-root': {
+                          backgroundColor: '#454545', // Light gray background when unchecked
+                          borderRadius: '4px', // Optional: for rounded corners
+                          padding:'0px',
+                          margin:'0px'
+                      },
+                      '&:hover .MuiSvgIcon-root': {
+                          backgroundColor: '#e0e0e0', // Slightly darker gray on hover
+                      },
+                      '&.Mui-checked .MuiSvgIcon-root': {
+                          backgroundColor: 'transparent', // Remove background when checked
+                      },
+                  }}
                     id={column.name}
                     name={column.name}
                     value={column.name}
                   />
-                  <label className={`w-full ${inferColumnType(column) === ColumnType.DIMENSION ? 'text-blue-600' : 'text-green-600'}`} htmlFor={column.name}>
+                  <label style={{color:inferColumnType(column) === ColumnType.DIMENSION ? '#157ded' : '#1eba2b'}} className={`w-full text-sm`} htmlFor={column.name}>
                     {column.name}
                   </label>
                   <button
@@ -111,7 +130,7 @@ const ReportBuilder: React.FC<ReportBuilderProps> = ({ client, activeModel }) =>
                     }}
                     className="text-gray-400 p-1 rounded-md"
                   >
-                    <FaFilter className="h-4" />
+                    <FaFilter className="h-3" />
                   </button>
                 </div>
               ))}
@@ -194,18 +213,16 @@ const ReportBuilder: React.FC<ReportBuilderProps> = ({ client, activeModel }) =>
         </div>
         <div className="flex flex-col px-4 space-y-2">
           <h1 className="font-bold">Query</h1>
-          <div className="flex w-full bg-slate-200 p-4 h-72 border-2 border-gray-900 rounded-2xl overflow-auto">
-            <div className="text-sm"
-              style={{
-                whiteSpace: "pre-wrap",
-                fontFamily: "'Courier New', Courier, monospace",
-                lineHeight: "1.5"
-              }}
-              dangerouslySetInnerHTML={{ __html: colorJSON(stringify(query, 2)) }}></div>
-          </div>
+          <CodeMirror
+                    value={stringify(query)}
+                    extensions={[json()]}
+                    theme={okaidia}
+                    height="200px"
+                    editable={false}
+                />
         </div>
         <div className="flex flex-col p-4">
-          <button onClick={executeQuery} className="bg-blue-600 text-white p-2 rounded-md">Run Query</button>
+          <button onClick={executeQuery} style={{background:'#1D66B5'}} className="text-white p-2 rounded-md">Run Query</button>
         </div>
         <div
           className="w-full p-4 ag-theme-quartz"
