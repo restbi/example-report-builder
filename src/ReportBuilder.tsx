@@ -51,6 +51,10 @@ const ReportBuilder: React.FC<ReportBuilderProps> = ({ client, activeModel }) =>
     }).catch((err) => {
       console.error(err);
     });
+    setQuery({
+      columns: [],
+      limit: 100,
+    });
   }, [activeModel, client]);
 
   return (
@@ -85,6 +89,7 @@ const ReportBuilder: React.FC<ReportBuilderProps> = ({ client, activeModel }) =>
               }).map((column: Column) => (
                 <div className="flex flex-row items-center pr-2 py-2 hover:bg-gray-700" key={column.name}>
                   <Checkbox
+                    checked={query.columns.includes(column.name)}
                     className="h-5"
                     onChange={(e) => {
                       if (e.target.checked) {

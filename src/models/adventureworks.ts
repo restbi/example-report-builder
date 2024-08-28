@@ -4,7 +4,7 @@ import { Connection, DatabaseType, Table, ColumnDataType, Join, Model, Formula, 
 const PostgresConnection: Connection = {
     id: '1',
     name: 'Postgres',
-    host: 'localhost',//'host.docker.internal',
+    host: 'host.docker.internal',//'host.docker.internal',
     port: 5433,
     user: 'postgres',
     password: 'test',

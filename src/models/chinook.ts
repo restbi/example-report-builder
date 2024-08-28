@@ -7,7 +7,7 @@ export const ChinookModel: Model = {
     "connection": {
         "id": "2",
         "name": "Chinook",
-        "host": "localhost",
+        "host": "host.docker.internal",
         "port": 5433,
         "user": "postgres",
         "password": "test",

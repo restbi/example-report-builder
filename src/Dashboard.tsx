@@ -64,7 +64,7 @@ const Dashboard = ({ client, activeModel }: DashboardProps) => {
         },
       };
 
-      client.executeQuery(query, ChinookModel).then((data) => {
+      client.executeQuery(query, activeModel).then((data) => {
         setChartData(data);
       });
     }
