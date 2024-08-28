@@ -23,9 +23,9 @@ import {
   QueryFilter,
   ColumnDataType,
 } from "restbi-sdk";
-import { ChinookModel } from "./models/chinook";
+import { ChinookModel } from "../models/chinook";
 import { FormControl, InputLabel, MenuItem, Select, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import Filter from "./Filter";
+import Filter from "../Filter";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -34,7 +34,7 @@ interface DashboardProps {
   activeModel: Model;
 }
 
-const Dashboard = ({ client, activeModel }: DashboardProps) => {
+const DrillAnywhere = ({ client, activeModel }: DashboardProps) => {
   const [chartData, setChartData] = useState<SQLResult | null>(null);
   const [selectedDimension, setSelectedDimension] = useState<string>("");
   const [selectedMetric, setSelectedMetric] = useState<string>("");
@@ -71,6 +71,8 @@ const Dashboard = ({ client, activeModel }: DashboardProps) => {
   }, [client, selectedDimension, selectedMetric]);
 
   const options = {
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
       y: {
         beginAtZero: true,
@@ -137,7 +139,7 @@ const Dashboard = ({ client, activeModel }: DashboardProps) => {
 
   return (
     <div className="flex flex-col w-full h-full">
-      <div className="flex flex-row w-full mb-4">
+      <div className="flex flex-row w-full p-8">
         <FormControl variant="outlined" style={{ minWidth: 200, marginRight: 20 }}>
           <InputLabel>Dimension</InputLabel>
           <Select
@@ -179,7 +181,7 @@ const Dashboard = ({ client, activeModel }: DashboardProps) => {
           </Select>
         </FormControl>
       </div>
-      <div className="flex flex-row p-4 space-x-2">
+      <div className="flex flex-row px-8 pb-4 space-x-2">
             {filters.map((filter) => (
               <div className="flex flex-row p-1 border-2 rounded-md mt-2" key={filter.column}>
                 <Filter
@@ -199,10 +201,28 @@ const Dashboard = ({ client, activeModel }: DashboardProps) => {
               </div>
             ))}
         </div>
-      <div className="flex flex-row w-full h-1/2">
-        <Bar data={data} options={options} />
+      <div className="flex flex-row w-full h-1/2  px-8 py-4">
+            <div className="flex flex-col w-full h-full px-4 py-8 border-2 rounded-lg">
+            {chartData && selectedDimension && selectedMetric && (
+              <div className="flex flex-col w-full h-full px-4 pb-4">
+                  <h1 className="text-lg font-bold mb-8">
+                      {selectedMetric} by {selectedDimension}
+                  </h1>
+                  <Bar data={data} options={options} />
+              </div>
+            )}
+            {!chartData && (
+              <div className="flex flex-col w-full h-full items-center justify-center">
+                  <h1 className="text-xl font-bold text-center mb-4">
+                      Select a Dimension and Metric to get started.
+                  </h1>
+              </div>
+              )}
+              </div>
       </div>
-
+      <div className="flex px-8 py-0">
+        Click on a bar to drill down into the data.
+      </div>
       <Dialog open={openDrillDownModal} onClose={() => setOpenDrillDownModal(false)}>
         <DialogTitle>Select a Dimension to Drill Down Into</DialogTitle>
         <DialogContent>
@@ -211,13 +231,9 @@ const Dashboard = ({ client, activeModel }: DashboardProps) => {
             <Select
                 value=""  // Empty value, so it doesn't track a specific selection
                 onChange={(e) => {
-                const newDimension = e.target.value as string;
-
-                // Trigger the drill-down action here
-                drillDown(newDimension);
-
-                // Close the modal after selection
-                setOpenDrillDownModal(false);
+                  const newDimension = e.target.value as string;
+                  drillDown(newDimension);
+                  setOpenDrillDownModal(false);
                 }}
                 label="Drill-Down Dimension"
                 displayEmpty
@@ -249,4 +265,4 @@ const Dashboard = ({ client, activeModel }: DashboardProps) => {
   );
 };
 
-export default Dashboard;
+export default DrillAnywhere;

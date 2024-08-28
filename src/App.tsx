@@ -4,18 +4,18 @@ import './App.css';
 import { Model, RestBIClient } from 'restbi-sdk';
 import { AdventureWorksModel } from './models/adventureworks';
 import { ChinookModel } from './models/chinook';
-import ReportBuilder from './ReportBuilder';
+import ReportBuilder from './pages/ReportBuilder';
 import { Button, Select, MenuItem } from '@mui/material';
-import ModelValidationPage from './ModelBuilder';
-import ModelBuilder from './ModelBuilder';
-import Dashboard from './Dashboard';
+import ModelValidationPage from './pages/ModelBuilder';
+import ModelBuilder from './pages/ModelBuilder';
+import DrillAnywhere from './pages/DrillAnywhere';
 
 let client = new RestBIClient(process.env.RESTBI_SERVER_URL || "http://localhost:3000");
 
 enum DemoPage {
   ReportBuilder = 'Report Builder',
   ModelBuilder = 'Model Helper',
-  Dashboard = 'Simple Dashboard'
+  DrillAnywhere = 'Drill Anywhere'
 }
 
 function App() {
@@ -43,7 +43,7 @@ function App() {
           >
             <MenuItem value={DemoPage.ReportBuilder}>{DemoPage.ReportBuilder}</MenuItem>
             <MenuItem value={DemoPage.ModelBuilder}>{DemoPage.ModelBuilder}</MenuItem>
-            <MenuItem value={DemoPage.Dashboard}>{DemoPage.Dashboard}</MenuItem>
+            <MenuItem value={DemoPage.DrillAnywhere}>{DemoPage.DrillAnywhere}</MenuItem>
         </Select>
 
         <div className="flex flex-row ml-auto">
@@ -71,8 +71,8 @@ function App() {
         {currentView === DemoPage.ModelBuilder && (
           <ModelBuilder defaultModel={activeModel} key={JSON.stringify(activeModel)}/>
         )}
-        {currentView === DemoPage.Dashboard && (
-          <Dashboard client={client} activeModel={activeModel}/>
+        {currentView === DemoPage.DrillAnywhere && (
+          <DrillAnywhere client={client} activeModel={activeModel}/>
         )}
       </div>
     </div>
