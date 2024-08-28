@@ -8,6 +8,7 @@ import ReportBuilder from './ReportBuilder';
 import { Button, Select, MenuItem } from '@mui/material';
 import ModelValidationPage from './ModelBuilder';
 import ModelBuilder from './ModelBuilder';
+import Dashboard from './Dashboard';
 
 let client = new RestBIClient(process.env.RESTBI_SERVER_URL || "http://localhost:3000");
 
@@ -64,10 +65,14 @@ function App() {
         </div>
       </div>
       <div className="flex flex-row h-full w-full">
-        {currentView === DemoPage.ReportBuilder ? (
+        {currentView === DemoPage.ReportBuilder && (
           <ReportBuilder client={client} activeModel={activeModel} />
-        ) : (
+        )}
+        {currentView === DemoPage.ModelBuilder && (
           <ModelBuilder defaultModel={activeModel} key={JSON.stringify(activeModel)}/>
+        )}
+        {currentView === DemoPage.Dashboard && (
+          <Dashboard client={client} activeModel={activeModel}/>
         )}
       </div>
     </div>

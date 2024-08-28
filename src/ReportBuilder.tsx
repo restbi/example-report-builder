@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Column, ColumnDataType, ColumnType, Formula, Model, Query, QueryFilter, RestBIClient, SQLError, SQLResult, Table } from 'restbi-sdk';
+import { Column, ColumnDataType, ColumnType, Formula, Model, Query, QueryFilter, RestBIClient, SQLError, SQLResult, Table, inferColumnType } from 'restbi-sdk';
 import { AgGridReact } from 'ag-grid-react';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -196,6 +196,8 @@ const ReportBuilder: React.FC<ReportBuilderProps> = ({ client, activeModel }) =>
             {filters.map((filter) => (
               <div className="flex flex-row p-1 border-2 rounded-md mt-2" key={filter.column}>
                 <Filter
+                  activeModel={activeModel}
+                  filter={filter}
                   key={filter.column}
                   column={
                     activeModel.tables.flatMap((table: Table) => table.columns).find((col: Column) => col.name === filter.column) || { id: 'unknown', name: filter.column, dataType: ColumnDataType.STRING } as Column
@@ -247,12 +249,7 @@ const ReportBuilder: React.FC<ReportBuilderProps> = ({ client, activeModel }) =>
   );
 };
 
-const inferColumnType = (column: any): ColumnType => {
-  if (column.type) {
-    return column.type;
-  }
-  return column.dataType === ColumnDataType.NUMBER ? ColumnType.MEASURE : ColumnType.DIMENSION;
-};
+
 
 export const stringify = (obj: {}, indent = 2) =>
   JSON.stringify(obj, (key, value) => {
@@ -261,24 +258,5 @@ export const stringify = (obj: {}, indent = 2) =>
     }
     return value;
   }, indent).replace(/"\uE000([^\uE000]+)\uE000"/g, match => match.slice(2, -2).replace(/\\"/g, '"').replace(/\uE001/g, '\\\"'));
-
-export const colorJSON = (json: string) => {
-  json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-    var cls = 'number';
-    if (/^"/.test(match)) {
-      if (/:$/.test(match)) {
-        cls = 'key';
-      } else {
-        cls = 'string';
-      }
-    } else if (/true|false/.test(match)) {
-      cls = 'boolean';
-    } else if (/null/.test(match)) {
-      cls = 'null';
-    }
-    return '<span class="' + cls + '">' + match + '</span>';
-  });
-}
 
 export default ReportBuilder;
